@@ -183,7 +183,7 @@ uninstall_images() {
         images=$(docker images | grep serhas | awk '{print $3}')
 
     if [ -n "$images" ]; then
-        colorized_echo yellow "Removing Docker images of serhas"
+        log "Removing serhas Docker images"
         for image in $images; do
             if docker rmi "$image" >/dev/null 2>&1; then
                 warn "Removed image: $image"
