@@ -1,13 +1,13 @@
 services:
-  sarhas:
-    image: thesarhas/sarhas:latest
+  serhas:
+    image: theserhas/serhas:latest
     restart: always
     env_file: .env
     environment:
-      SQLALCHEMY_DATABASE_URL: "mariadb+pymysql://root:12341234@127.0.0.1/sarhas"
+      SQLALCHEMY_DATABASE_URL: "mariadb+pymysql://root:12341234@127.0.0.1/serhas"
     network_mode: host
     volumes:
-      - /var/lib/sarhas:/var/lib/sarhas
+      - /var/lib/serhas:/var/lib/serhas
     depends_on:
       db:
         condition: service_healthy
@@ -17,9 +17,9 @@ services:
     restart: always
     environment:
       MARIADB_ROOT_PASSWORD: 12341234
-      MARIADB_DATABASE: sarhas
+      MARIADB_DATABASE: serhas
     volumes:
-      - /var/lib/sarhas/mysql:/var/lib/mysql
+      - /var/lib/serhas/mysql:/var/lib/mysql
     ports:
       - "127.0.0.1:3306:3306"
     healthcheck:

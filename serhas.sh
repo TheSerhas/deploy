@@ -113,9 +113,9 @@ uninstall_script() {
 
 
 
-install_sarhas() {
-    FILES_URL_PREFIX="https://raw.githubusercontent.com/thesarhas/sarhas/master"
-	COMPOSE_FILES_URL="https://raw.githubusercontent.com/thesarhas/deploy/master"
+install_serhas() {
+    FILES_URL_PREFIX="https://raw.githubusercontent.com/Theserhas/serhas/master"
+	COMPOSE_FILES_URL="https://raw.githubusercontent.com/Theserhas/deploy/feat-sar"
 
     mkdir -p "$CONFIG_DIR"
     mkdir -p "$DATA_DIR"
@@ -128,17 +128,17 @@ install_sarhas() {
     curl -sL "$FILES_URL_PREFIX/.env.example" -o "$CONFIG_DIR/.env"
     success "File saved in $CONFIG_DIR/.env"
 
-    success "Sarhas files downloaded successfully"
+    success "serhas files downloaded successfully"
 }
 
-uninstall_sarhas() {
-    log "Removing Sarhas configuration and data directories"
+uninstall_serhas() {
+    log "Removing serhas configuration and data directories"
     rm -rf "$CONFIG_DIR"
     rm -rf "$DATA_DIR"
-    success "Sarhas configuration and data directories removed successfully"
+    success "serhas configuration and data directories removed successfully"
 }
 
-is_sarhas_installed() {
+is_serhas_installed() {
     if [ -d "$CONFIG_DIR" ]; then
         return 0
     else
@@ -146,7 +146,7 @@ is_sarhas_installed() {
     fi
 }
 
-is_sarhas_running() {
+is_serhas_running() {
     if [ -z "$($COMPOSE -f $COMPOSE_FILE ps -q -a)" ]; then
         return 1
     else
@@ -154,36 +154,36 @@ is_sarhas_running() {
     fi
 }
 
-start_sarhas() {
-    log "Starting Sarhas service"
+start_serhas() {
+    log "Starting serhas service"
     $COMPOSE -f $COMPOSE_FILE -p "$SCRIPT_NAME" up -d --remove-orphans
-    success "Sarhas service started successfully"
+    success "serhas service started successfully"
 }
 
-stop_sarhas() {
-    log "Stopping Sarhas service"
+stop_serhas() {
+    log "Stopping serhas service"
     $COMPOSE -f $COMPOSE_FILE -p "$SCRIPT_NAME" down
-    success "Sarhas service stopped successfully"
+    success "serhas service stopped successfully"
 }
 
-logs_sarhas() {
-    log "Displaying Sarhas service logs"
+logs_serhas() {
+    log "Displaying serhas service logs"
     $COMPOSE -f $COMPOSE_FILE -p "$SCRIPT_NAME" logs -f
 }
 
-sarhas_cli() {
-    $COMPOSE -f $COMPOSE_FILE -p "$SCRIPT_NAME" exec -e CLI_PROG_NAME="sarhas cli" sarhas /app/sarhas-cli.py "$@"
+serhas_cli() {
+    $COMPOSE -f $COMPOSE_FILE -p "$SCRIPT_NAME" exec -e CLI_PROG_NAME="serhas cli" serhas /app/serhas-cli.py "$@"
 }
 
-update_sarhas() {
+update_serhas() {
     $COMPOSE -f $COMPOSE_FILE -p "$SCRIPT_NAME" pull
 }
 
 uninstall_images() {
-        images=$(docker images | grep sarhas | awk '{print $3}')
+        images=$(docker images | grep serhas | awk '{print $3}')
 
     if [ -n "$images" ]; then
-        colorized_echo yellow "Removing Docker images of Sarhas"
+        colorized_echo yellow "Removing Docker images of serhas"
         for image in $images; do
             if docker rmi "$image" >/dev/null 2>&1; then
                 warn "Removed image: $image"
@@ -214,8 +214,8 @@ help() {
 case "$1" in
     install)
         check_running_as_root
-        if is_sarhas_installed; then
-            error "Sarhas is already installed. Use 'update' to update."
+        if is_serhas_installed; then
+            error "serhas is already installed. Use 'update' to update."
         fi
         detect_os
         if ! command -v jq >/dev/null 2>&1; then
@@ -229,117 +229,117 @@ case "$1" in
         fi
         detect_compose
         install_script
-        install_sarhas
-        start_sarhas
-        logs_sarhas
+        install_serhas
+        start_serhas
+        logs_serhas
         ;;
     update)
         check_running_as_root
-        if ! is_sarhas_installed; then
-            error "Sarhas is not installed. Use 'install' to install."
+        if ! is_serhas_installed; then
+            error "serhas is not installed. Use 'install' to install."
         fi
         detect_compose
         update_script
-        log "Updating Sarhas to the latest version"
-        update_sarhas
-        log "Restarting Sarhas service"
-        stop_sarhas
-        start_sarhas
-        success "Sarhas updated successfully"
-        logs_sarhas
+        log "Updating serhas to the latest version"
+        update_serhas
+        log "Restarting serhas service"
+        stop_serhas
+        start_serhas
+        success "serhas updated successfully"
+        logs_serhas
         ;;
     uninstall)
         check_running_as_root
-        if ! is_sarhas_installed; then
-            error "Sarhas is not installed."
+        if ! is_serhas_installed; then
+            error "serhas is not installed."
         fi
-        read -p "Are you sure you want to uninstall Sarhas? This will remove all configuration and data. (y/N): " confirm
+        read -p "Are you sure you want to uninstall serhas? This will remove all configuration and data. (y/N): " confirm
         if [[ ! "$confirm" =~ ^[Yy]$ ]]; then
             error "Uninstallation cancelled."
         fi
         detect_compose
-        if is_sarhas_running; then
-            stop_sarhas
+        if is_serhas_running; then
+            stop_serhas
         fi
-        uninstall_sarhas
+        uninstall_serhas
         uninstall_images
         uninstall_script
-        success "Sarhas uninstalled successfully"
+        success "serhas uninstalled successfully"
         ;;
     status)
-        if ! is_sarhas_installed; then
-            error "Sarhas is not installed. Use 'install' to install."
+        if ! is_serhas_installed; then
+            error "serhas is not installed. Use 'install' to install."
         fi
         detect_compose
-        if is_sarhas_running; then
-            success "Sarhas is running."
+        if is_serhas_running; then
+            success "serhas is running."
         else
-            warn "Sarhas is not running."
+            warn "serhas is not running."
         fi
         ;;
     start)
-        if ! is_sarhas_installed; then
-            error "Sarhas is not installed. Use 'install' to install."
+        if ! is_serhas_installed; then
+            error "serhas is not installed. Use 'install' to install."
         fi
         detect_compose
-        if is_sarhas_running; then
-            warn "Sarhas is already running."
+        if is_serhas_running; then
+            warn "serhas is already running."
         else
-            start_sarhas
+            start_serhas
         fi
         ;;
     stop)
-        if ! is_sarhas_installed; then
-            error "Sarhas is not installed. Use 'install' to install."
+        if ! is_serhas_installed; then
+            error "serhas is not installed. Use 'install' to install."
         fi
         detect_compose
-        if is_sarhas_running; then
-            stop_sarhas
+        if is_serhas_running; then
+            stop_serhas
         else
-            warn "Sarhas is not running."
+            warn "serhas is not running."
         fi
         ;;
     restart)
-        if ! is_sarhas_installed; then
-            error "Sarhas is not installed. Use 'install' to install."
+        if ! is_serhas_installed; then
+            error "serhas is not installed. Use 'install' to install."
         fi
         detect_compose
-        if is_sarhas_running; then
-            stop_sarhas
-            start_sarhas
+        if is_serhas_running; then
+            stop_serhas
+            start_serhas
         else
-            warn "Sarhas is not running. Starting Sarhas."
-            start_sarhas
+            warn "serhas is not running. Starting serhas."
+            start_serhas
         fi
         ;;
     logs)
-        if ! is_sarhas_installed; then
-            error "Sarhas is not installed. Use 'install' to install."
+        if ! is_serhas_installed; then
+            error "serhas is not installed. Use 'install' to install."
         fi
         detect_compose
-        if ! is_sarhas_running; then
-            error "Sarhas is not running. Use 'start' to start."
+        if ! is_serhas_running; then
+            error "serhas is not running. Use 'start' to start."
         fi
-        logs_sarhas
+        logs_serhas
         ;;
     env)
-        if ! is_sarhas_installed; then
-            error "Sarhas is not installed. Use 'install' to install."
+        if ! is_serhas_installed; then
+            error "serhas is not installed. Use 'install' to install."
         fi
         nano "$CONFIG_DIR/.env"
         ;;
     cli)
-        if ! is_sarhas_installed; then
-            error "Sarhas is not installed. Use 'install' to install."
+        if ! is_serhas_installed; then
+            error "serhas is not installed. Use 'install' to install."
         fi
         detect_compose
-        if ! is_sarhas_running; then
-            error "Sarhas is not running. Use 'start' to start."
+        if ! is_serhas_running; then
+            error "serhas is not running. Use 'start' to start."
         fi
         shift
-        sarhas_cli "$@"
+        serhas_cli "$@"
         ;;
     *)
-        usage
+        help
         ;;
 esac
