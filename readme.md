@@ -1,5 +1,5 @@
 # Serhas
 
 ```bash
-sudo bash -c "$(curl -sL https://github.com/TheSerhas/Serhas/raw/master/script.sh)" @ install
+sudo bash -c "$(curl -sL https://github.com/TheSerhas/deploy/raw/master/serhas.sh)" @ install
 ```
