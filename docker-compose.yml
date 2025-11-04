@@ -1,6 +1,6 @@
 services:
   serhas:
-    image: theserhas/serhas:latest
+    image: ghcr.io/theserhas/serhas:latest
     restart: always
     env_file: .env
     environment:

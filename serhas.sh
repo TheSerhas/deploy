@@ -115,7 +115,7 @@ uninstall_script() {
 
 install_serhas() {
     FILES_URL_PREFIX="https://raw.githubusercontent.com/Theserhas/serhas/master"
-	COMPOSE_FILES_URL="https://raw.githubusercontent.com/Theserhas/deploy/feat-sar"
+	COMPOSE_FILES_URL="https://raw.githubusercontent.com/Theserhas/deploy/master"
 
     mkdir -p "$CONFIG_DIR"
     mkdir -p "$DATA_DIR"
@@ -230,6 +230,7 @@ case "$1" in
         detect_compose
         install_script
         install_serhas
+        update_serhas
         start_serhas
         logs_serhas
         ;;
